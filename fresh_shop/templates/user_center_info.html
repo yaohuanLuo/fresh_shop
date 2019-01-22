@@ -1,0 +1,129 @@
+{% extends 'base_main.html' %}
+
+
+{% block title %}
+    天天生鲜-用户中心
+{% endblock %}
+
+
+{% block search %}
+    <div class="search_bar clearfix">
+		<a href="{% url 'goods:index' %}" class="logo fl"><img src="/static/images/logo.png"></a>
+		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;用户中心</div>
+		<div class="search_con fr">
+			<input type="text" class="input_text fl" name="" placeholder="搜索商品">
+			<input type="button" class="input_btn fr" name="" value="搜索">
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block content %}
+    <div class="main_con clearfix">
+		<div class="left_menu_con clearfix">
+			<h3>用户中心</h3>
+			<ul>
+				{% include 'base_user.html' %}
+			</ul>
+		</div>
+		<div class="right_content clearfix">
+				<div class="info_con clearfix">
+				<h3 class="common_title2">基本信息</h3>
+                        <ul class="user_info_list">
+							<li><span>用户名：</span>{{ address.signer_name }}</li>
+							<li><span>联系方式：</span>{{ address.signer_mobile }}</li>
+							<li><span>联系地址：</span>{{ address.address }}</li>
+						</ul>
+				</div>
+
+				<h3 class="common_title2">最近浏览</h3>
+				<div class="has_view_list">
+					<ul class="goods_type_list clearfix">
+                {% for bro in browse %}
+                    <li>
+                        <a href="{% url 'goods:detail' bro.0 %}"><img src="/media/{{ bro.3 }}"></a>
+                        <h4><a href="{% url 'goods:detail' bro.0 %}">{{ bro.1 }}</a></h4>
+                        <div class="operate">
+                            <span class="prize">￥{{ bro.2 }}</span>
+                            <span class="unit">{{ bro.2 }}/500g</span>
+                            <a href="" class="add_goods" title="加入购物车" onclick="add_cart({{ bro.0 }})"></a>
+                        </div>
+                        {% csrf_token %}
+                        <script>
+                            function add_cart(id) {
+                                var csrf = $('input[name="csrfmiddlewaretoken"]').val()
+                                $.ajax({
+                                    url: '/cart/add_cart/',
+                                    type: 'POST',
+                                    data: {'goods_id': id, 'goods_num': 1},
+                                    headers: {'X-CSRFToken': csrf},
+                                    dataType: 'json',
+                                    success: function (data) {
+                                        if(data.code == '200'){
+                                            {#$('#show_count').text(data.count)#}
+                                            console.log(data.count)
+                                        }
+                                    },
+                                    error: function (data) {
+                                        console.log('失败')
+                                    }
+                                })
+                            }
+                        </script>
+                    </li>
+                {% endfor %}
+
+{#				<li>#}
+{#					<a href="detail.html"><img src="images/goods/goods003.jpg"></a>#}
+{#					<h4><a href="detail.html">大兴大棚草莓</a></h4>#}
+{#					<div class="operate">#}
+{#						<span class="prize">￥16.80</span>#}
+{#						<span class="unit">16.80/500g</span>#}
+{#						<a href="#" class="add_goods" title="加入购物车"></a>#}
+{#					</div>#}
+{#				</li>#}
+{##}
+{#				<li>#}
+{#					<a href="#"><img src="images/goods/goods004.jpg"></a>#}
+{#					<h4><a href="#">吐鲁番梨光杏</a></h4>#}
+{#					<div class="operate">#}
+{#						<span class="prize">￥5.50</span>#}
+{#						<span class="unit">5.50/500g</span>#}
+{#						<a href="#" class="add_goods" title="加入购物车"></a>#}
+{#					</div>#}
+{#				</li>#}
+{##}
+{#				<li>#}
+{#					<a href="#"><img src="images/goods/goods005.jpg"></a>#}
+{#					<h4><a href="#">黄肉桃</a></h4>#}
+{#					<div class="operate">#}
+{#						<span class="prize">￥10.00</span>#}
+{#						<span class="unit">10.00/500g</span>#}
+{#						<a href="#" class="add_goods" title="加入购物车"></a>#}
+{#					</div>#}
+{#				</li>#}
+{##}
+{#				<li>#}
+{#					<a href="#"><img src="images/goods/goods006.jpg"></a>#}
+{#					<h4><a href="#">进口西梅</a></h4>#}
+{#					<div class="operate">#}
+{#						<span class="prize">￥28.80</span>#}
+{#						<span class="unit">28.8/500g</span>#}
+{#						<a href="#" class="add_goods" title="加入购物车"></a>#}
+{#					</div>#}
+{#				</li>#}
+{##}
+{#				<li>#}
+{#					<a href="#"><img src="images/goods/goods007.jpg"></a>#}
+{#					<h4><a href="#">香梨</a></h4>#}
+{#					<div class="operate">#}
+{#						<span class="prize">￥6.45</span>#}
+{#						<span class="unit">6.45/500g</span>#}
+{#						<a href="#" class="add_goods" title="加入购物车"></a>#}
+{#					</div>#}
+{#				</li>#}
+			</ul>
+		</div>
+		</div>
+	</div>
+{% endblock %}
